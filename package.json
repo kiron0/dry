@@ -2,7 +2,7 @@
   "name": "dry",
   "displayName": "DRY",
   "description": "Detect duplicate code and refactor it before it becomes debt.",
-  "icon": "images/dry.png",
+  "icon": "media/dry.png",
   "version": "1.0.2",
   "publisher": "thk",
   "author": "Toufiq Hasan Kiron",
@@ -67,7 +67,7 @@
         {
           "id": "dry",
           "title": "DRY",
-          "icon": "images/dry.png"
+          "icon": "media/dry.png"
         }
       ]
     },
@@ -76,7 +76,7 @@
         {
           "id": "dry.reportView",
           "name": "DRY Report",
-          "icon": "images/dry.png"
+          "icon": "media/dry.png"
         }
       ]
     },

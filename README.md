@@ -1,5 +1,5 @@
 ﻿<div align="center">
-  <img src="images/dry.png" alt="DRY Icon" width="140" />
+  <img src="media/dry.png" alt="DRY Icon" width="140" />
 
   # DRY
 
