@@ -10,6 +10,14 @@ const registerCommand = vi.fn((id: string, handler: (...args: unknown[]) => unkn
   return noopDisposable();
 });
 const showInformationMessage = vi.fn();
+const statusBarItem = {
+  text: "",
+  tooltip: "",
+  command: undefined as unknown,
+  show: vi.fn(),
+  hide: vi.fn(),
+  dispose: vi.fn(),
+};
 
 const mockReport = {
   generatedAt: Date.now(),
@@ -25,6 +33,7 @@ const updateReport = vi.fn();
 vi.mock("vscode", () => ({
   window: {
     createTreeView: vi.fn(() => noopDisposable()),
+    createStatusBarItem: vi.fn(() => statusBarItem),
     showInformationMessage,
     showWarningMessage: vi.fn(),
     showTextDocument: vi.fn(async () => ({
@@ -63,6 +72,10 @@ vi.mock("vscode", () => ({
   },
   TextEditorRevealType: {
     InCenter: 0,
+  },
+  StatusBarAlignment: {
+    Left: 1,
+    Right: 2,
   },
 }));
 
@@ -115,6 +128,8 @@ describe("extension smoke", () => {
     showInformationMessage.mockClear();
     scanWorkspace.mockClear();
     updateReport.mockClear();
+    statusBarItem.show.mockClear();
+    statusBarItem.dispose.mockClear();
   });
 
   it("activates and registers key commands", async () => {
@@ -127,9 +142,13 @@ describe("extension smoke", () => {
     expect(registerCommand).toHaveBeenCalledWith("dry.scanWorkspace", expect.any(Function));
     expect(registerCommand).toHaveBeenCalledWith("dry.extractToFunction", expect.any(Function));
     expect(registerCommand).toHaveBeenCalledWith("dry.moveToSharedUtil", expect.any(Function));
+    expect(registerCommand).toHaveBeenCalledWith("dry.openSettingsUI", expect.any(Function));
+    expect(registerCommand).toHaveBeenCalledWith("dry.quickOptions", expect.any(Function));
+    expect(registerCommand).toHaveBeenCalledWith("dry.resetSettings", expect.any(Function));
     await vi.waitFor(() => {
       expect(scanWorkspace).toHaveBeenCalled();
       expect(updateReport).toHaveBeenCalledWith(mockReport);
+      expect(statusBarItem.show).toHaveBeenCalled();
     });
   });
 

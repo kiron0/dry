@@ -1,11 +1,13 @@
 ﻿import * as vscode from "vscode";
 
-import { getDryConfig } from "./core/config";
+import { defaultDryConfig, getDryConfig, updateDryConfig } from "./core/config";
 import { DuplicateScanner } from "./core/scanner";
 import type { DryReport, DuplicateCluster, DuplicateOccurrence } from "./core/types";
 import { DryCodeActionProvider } from "./features/code-actions";
 import { DryRefactorService } from "./features/refactor";
 import { DryReportProvider } from "./ui/report";
+import { registerSettingsUiCommand } from "./ui/settings-webview";
+import { DryStatusBarController } from "./ui/status-bar";
 
 function getOrCreateDiagnosticBucket(
   map: Map<string, { uri: vscode.Uri; diagnostics: vscode.Diagnostic[] }>,
@@ -70,6 +72,7 @@ export function activate(context: vscode.ExtensionContext): void {
   const scanner = new DuplicateScanner(() => getDryConfig());
   const refactor = new DryRefactorService();
   const reportProvider = new DryReportProvider();
+  const statusBar = new DryStatusBarController();
 
   const treeView = vscode.window.createTreeView("dry.reportView", {
     treeDataProvider: reportProvider,
@@ -88,9 +91,11 @@ export function activate(context: vscode.ExtensionContext): void {
   };
 
   const runScan = async (showToast = false): Promise<void> => {
+    const config = getDryConfig();
     const report = await scanner.scanWorkspace();
     publishDiagnostics(diagnostics, report);
     reportProvider.update(report);
+    statusBar.update(report, config);
 
     if (showToast) {
       vscode.window.showInformationMessage(
@@ -144,6 +149,77 @@ export function activate(context: vscode.ExtensionContext): void {
     await runScan();
   });
 
+  const commandResetSettings = vscode.commands.registerCommand("dry.resetSettings", async () => {
+    await updateDryConfig(defaultDryConfig);
+    await runScan(true);
+    vscode.window.showInformationMessage("DRY settings reset to defaults.");
+  });
+
+  const commandQuickOptions = vscode.commands.registerCommand("dry.quickOptions", async () => {
+    const current = getDryConfig();
+    const normalizedState = current.enableNormalizedDetection ? "On" : "Off";
+
+    const choice = await vscode.window.showQuickPick(
+      [
+        { label: "Open Settings UI", value: "open-settings" },
+        { label: "Scan Workspace Now", value: "scan-workspace" },
+        {
+          label: `Toggle Normalized Detection (${normalizedState})`,
+          value: "toggle-normalized",
+        },
+        { label: "Reset Settings to Defaults", value: "reset-settings" },
+      ],
+      {
+        title: "DRY Quick Options",
+        placeHolder: "Choose an action",
+      },
+    );
+
+    if (!choice) {
+      return;
+    }
+
+    if (choice.value === "open-settings") {
+      await vscode.commands.executeCommand("dry.openSettingsUI");
+      return;
+    }
+
+    if (choice.value === "scan-workspace") {
+      await runScan(true);
+      return;
+    }
+
+    if (choice.value === "toggle-normalized") {
+      const next = {
+        ...current,
+        enableNormalizedDetection: !current.enableNormalizedDetection,
+      };
+      await updateDryConfig(next);
+      await runScan(true);
+      vscode.window.showInformationMessage(
+        `DRY normalized detection ${next.enableNormalizedDetection ? "enabled" : "disabled"}.`,
+      );
+      return;
+    }
+
+    if (choice.value === "reset-settings") {
+      await vscode.commands.executeCommand("dry.resetSettings");
+    }
+  });
+
+  const settingsUi = registerSettingsUiCommand(
+    context,
+    () => getDryConfig(),
+    async (settings) => {
+      await updateDryConfig(settings);
+      await runScan();
+    },
+    async (settings) => {
+      await updateDryConfig(settings);
+      await runScan(true);
+    },
+  );
+
   const codeActions = vscode.languages.registerCodeActionsProvider(
     [
       { language: "javascript", scheme: "file" },
@@ -161,11 +237,15 @@ export function activate(context: vscode.ExtensionContext): void {
     diagnostics,
     scanner,
     reportProvider,
+    statusBar,
     treeView,
     commandScan,
     commandOpenOccurrence,
     commandExtract,
     commandMove,
+    commandResetSettings,
+    commandQuickOptions,
+    settingsUi,
     codeActions,
     vscode.workspace.onDidChangeTextDocument(() => scheduleScan()),
     vscode.workspace.onDidOpenTextDocument(() => scheduleScan()),

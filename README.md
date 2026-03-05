@@ -31,6 +31,7 @@ If copy-paste creeps in, DRY shows where it is and helps you clean it up fast.
 - Exact duplicate matching
 - Normalized structure matching (ignores comments, literals, and identifier names)
 - Problems panel diagnostics with related duplicate links
+- Status bar DRY indicator (click opens Quick Options)
 - Quick Fix actions:
   - `DRY: Extract duplicate to function` for same-file exact duplicates
   - `DRY: Move duplicate to shared util` for cross-file exact duplicates
@@ -48,6 +49,9 @@ Open Command Palette and run:
 - `DRY: Scan Workspace for Duplicates`
 - `DRY: Extract Duplicate to Function`
 - `DRY: Move Duplicate to Shared Util`
+- `DRY: Open Settings UI`
+- `DRY: Quick Options`
+- `DRY: Reset Settings`
 
 ---
 
@@ -82,6 +86,7 @@ Press `F5` in VS Code to run the extension in Extension Development Host.
 - Refactor quick fixes are intentionally conservative in MVP.
 - Auto-refactor is enabled only for exact duplicate clusters.
 - Normalized clusters are reported for awareness and manual follow-up.
+- Settings UI includes quick actions for save, reset defaults, and instant scan.
 
 ---
 
