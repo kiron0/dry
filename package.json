@@ -2,14 +2,15 @@
   "name": "dry",
   "displayName": "DRY",
   "description": "Detect duplicate code and refactor it before it becomes debt.",
-  "icon": "media/dry.png",
-  "version": "1.0.1",
+  "icon": "images/dry.png",
+  "version": "1.0.2",
   "publisher": "thk",
   "author": "Toufiq Hasan Kiron",
   "repository": {
     "type": "git",
     "url": "https://github.com/kiron0/dry.git"
   },
+  "homepage": "https://dry.js.org",
   "license": "MIT",
   "engines": {
     "vscode": "^1.109.0"
@@ -66,7 +67,7 @@
         {
           "id": "dry",
           "title": "DRY",
-          "icon": "media/dry.png"
+          "icon": "images/dry.png"
         }
       ]
     },
@@ -75,7 +76,7 @@
         {
           "id": "dry.reportView",
           "name": "DRY Report",
-          "icon": "media/dry.png"
+          "icon": "images/dry.png"
         }
       ]
     },
