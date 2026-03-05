@@ -1,4 +1,4 @@
-﻿import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   dedentBlock,
@@ -6,7 +6,7 @@ import {
   normalizeForExact,
   normalizeForStructure,
   stripComments,
-} from "../../src/normalize";
+} from "../../src/core/normalize";
 
 describe("normalize", () => {
   it("normalizes exact blocks by trimming trailing spaces", () => {

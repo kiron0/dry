@@ -113,7 +113,7 @@ console.log(subtotal + tax);
 `,
     );
 
-    const { DuplicateScanner } = await import("../../src/scanner");
+    const { DuplicateScanner } = await import("../../src/core/scanner");
     const scanner = new DuplicateScanner(() => ({
       minLines: 3,
       maxLines: 6,
@@ -148,7 +148,7 @@ console.log(invoiceTotal + extraCharge);
 `,
     );
 
-    const { DuplicateScanner } = await import("../../src/scanner");
+    const { DuplicateScanner } = await import("../../src/core/scanner");
     const scanner = new DuplicateScanner(() => ({
       minLines: 3,
       maxLines: 6,

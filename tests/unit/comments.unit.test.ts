@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { stripComments } from "../../src/normalize";
+import { stripComments } from "../../src/core/normalize";
 
 describe("stripComments", () => {
   it("removes block and inline comments", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isMeaningfulBlock } from "../../src/normalize";
+import { isMeaningfulBlock } from "../../src/core/normalize";
 
 describe("isMeaningfulBlock", () => {
   it("returns false for mostly empty snippets", () => {

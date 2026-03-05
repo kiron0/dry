@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "dry",
   "displayName": "DRY",
   "description": "Detect duplicate code and refactor it before it becomes debt.",
@@ -15,9 +15,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished",
-    "onCommand:dry.scanWorkspace",
-    "onView:dry.reportView"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -92,16 +90,18 @@
   },
   "scripts": {
     "compile": "tsc -p ./",
-    "watch": "tsc -w -p ./",
     "lint": "tsc --noEmit -p ./",
+    "watch": "tsc -w -p ./",
     "test": "vitest run",
+    "test:watch": "vitest",
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
     "test:smoke": "vitest run tests/smoke",
-    "test:watch": "vitest"
+    "vscode:prepublish": "npm run compile",
+    "package": "vsce package --no-yarn"
   },
   "devDependencies": {
-    "@types/node": "^25.3.0",
+    "@types/node": "^25.3.3",
     "@types/vscode": "^1.109.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"

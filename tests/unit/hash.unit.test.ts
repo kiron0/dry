@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { simpleHash } from "../../src/normalize";
+import { simpleHash } from "../../src/core/normalize";
 
 describe("simpleHash", () => {
   it("is deterministic for same input", () => {
