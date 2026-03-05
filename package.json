@@ -1,0 +1,109 @@
+﻿{
+  "name": "dry",
+  "displayName": "DRY",
+  "description": "Detect duplicate code and refactor it before it becomes debt.",
+  "version": "0.1.0",
+  "publisher": "thk",
+  "author": "Toufiq Hasan Kiron",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.109.0"
+  },
+  "categories": [
+    "Linters",
+    "Programming Languages",
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:dry.scanWorkspace",
+    "onView:dry.reportView"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "dry.scanWorkspace",
+        "title": "Scan Workspace for Duplicates",
+        "category": "DRY"
+      },
+      {
+        "command": "dry.openOccurrence",
+        "title": "Open Duplicate Occurrence",
+        "category": "DRY"
+      },
+      {
+        "command": "dry.extractToFunction",
+        "title": "Extract Duplicate to Function",
+        "category": "DRY"
+      },
+      {
+        "command": "dry.moveToSharedUtil",
+        "title": "Move Duplicate to Shared Util",
+        "category": "DRY"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "dry",
+          "title": "DRY",
+          "icon": "media/dry.png"
+        }
+      ]
+    },
+    "views": {
+      "dry": [
+        {
+          "id": "dry.reportView",
+          "name": "DRY Report"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "DRY",
+      "properties": {
+        "dry.minLines": {
+          "type": "number",
+          "default": 4,
+          "minimum": 3,
+          "maximum": 20,
+          "description": "Minimum line length for duplicate block detection."
+        },
+        "dry.maxLines": {
+          "type": "number",
+          "default": 12,
+          "minimum": 4,
+          "maximum": 60,
+          "description": "Maximum line length for duplicate block detection."
+        },
+        "dry.enableNormalizedDetection": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect near-duplicates by normalizing comments, literals, and identifiers."
+        },
+        "dry.excludeGlob": {
+          "type": "string",
+          "default": "{**/node_modules/**,**/.git/**,**/dist/**,**/build/**,**/out/**,**/.next/**}",
+          "description": "Glob pattern to exclude files from DRY scanning."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./",
+    "lint": "tsc --noEmit -p ./",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:smoke": "vitest run tests/smoke",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "@types/vscode": "^1.109.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}
