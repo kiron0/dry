@@ -1,4 +1,4 @@
-﻿import * as vscode from "vscode";
+import * as vscode from "vscode";
 
 import { defaultDryConfig, getDryConfig, updateDryConfig } from "./core/config";
 import { DuplicateScanner } from "./core/scanner";
@@ -91,16 +91,21 @@ export function activate(context: vscode.ExtensionContext): void {
   };
 
   const runScan = async (showToast = false): Promise<void> => {
-    const config = getDryConfig();
-    const report = await scanner.scanWorkspace();
-    publishDiagnostics(diagnostics, report);
-    reportProvider.update(report);
-    statusBar.update(report, config);
+    try {
+      const config = getDryConfig();
+      const report = await scanner.scanWorkspace();
+      publishDiagnostics(diagnostics, report);
+      reportProvider.update(report);
+      statusBar.update(report, config);
 
-    if (showToast) {
-      vscode.window.showInformationMessage(
-        `DRY scan complete: score ${report.projectScore}/100, ${report.clusters.length} clusters.`,
-      );
+      if (showToast) {
+        vscode.window.showInformationMessage(
+          `DRY scan complete: score ${report.projectScore}/100, ${report.clusters.length} clusters.`,
+        );
+      }
+    } catch (error) {
+      console.error("DRY scan failed", error);
+      vscode.window.showErrorMessage("DRY scan failed. Check the console for details.");
     }
   };
 
